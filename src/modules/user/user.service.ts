@@ -17,8 +17,20 @@ const getSingleUser = async (userId: string): Promise<TUser | null> => {
   return result
 }
 
+const updateUser = async (
+  userId: string,
+  userData: TUser,
+): Promise<TUser | null> => {
+  const result = await User.findByIdAndUpdate(userId, userData, {
+    new: true,
+    runValidators: true,
+  })
+  return result
+}
+
 export const userService = {
   createUser,
   getAlllUser,
   getSingleUser,
+  updateUser,
 }
