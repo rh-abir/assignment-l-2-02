@@ -12,4 +12,7 @@ route.put('/:userId', userController.updateUser)
 
 route.delete('/:userId', userController.deleteUser)
 
+// orders
+route.put('/:userId/orders', userController.createUserOrders)
+
 export const userRoute = route

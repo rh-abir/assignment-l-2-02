@@ -41,10 +41,20 @@ const deleteUser = async (userId: string): Promise<TUser | null> => {
   return result
 }
 
+const createUserOrders = async (userId: string, userData: TUser) => {
+  const result = await User.aggregate([
+    { $match: { _id: userId } },
+    { $addFields: { orders: userData } },
+  ])
+
+  return result
+}
+
 export const userService = {
   createUser,
   getAlllUser,
   getSingleUser,
   updateUser,
   deleteUser,
+  createUserOrders,
 }
