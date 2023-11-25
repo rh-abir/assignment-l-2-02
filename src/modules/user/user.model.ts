@@ -46,10 +46,12 @@ const UserSchema = new Schema<TUser>({
   userId: {
     type: Number,
     required: [true, 'User ID is required'],
+    unique: true,
   },
   username: {
     type: String,
     required: [true, 'Username is required'],
+    unique: true,
   },
   password: {
     type: String,
@@ -66,6 +68,7 @@ const UserSchema = new Schema<TUser>({
   email: {
     type: String,
     required: [true, 'Email is required'],
+    unique: true,
   },
   isActive: {
     type: Boolean,
