@@ -103,4 +103,9 @@ UserSchema.post('save', function (doc, next) {
   next()
 })
 
+// UserSchema.post(/^find/, function (this: Query<TUser, Document>, next) {
+//   this.find({ userStatus: { $eq: 'active' } })
+//   next()
+// })
+
 export const User = model<TUser>('User', UserSchema)
