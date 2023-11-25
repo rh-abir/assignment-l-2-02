@@ -103,6 +103,11 @@ UserSchema.post('save', function (doc, next) {
   next()
 })
 
+UserSchema.post('updateOne', function (doc, next) {
+  doc.password = ''
+  next()
+})
+
 // UserSchema.post(/^find/, function (this: Query<TUser, Document>, next) {
 //   this.find({ userStatus: { $eq: 'active' } })
 //   next()

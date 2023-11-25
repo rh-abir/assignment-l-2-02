@@ -18,7 +18,10 @@ const getAlllUser = async (): Promise<TUser[]> => {
 const getSingleUser = async (userId: string): Promise<TUser | null> => {
   const result = await User.findById(userId, {
     password: 0,
+    orders: 0,
+    __v: 0,
   })
+
   return result
 }
 
