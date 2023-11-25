@@ -12,7 +12,10 @@ app.use(cors())
 app.use('/api/users', userRoute)
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('thisl  text')
+  res.status(200).json({
+    staus: true,
+    message: 'wellcome to the project',
+  })
 })
 
 export default app
