@@ -68,7 +68,29 @@ const updateUser = async (req: Request, res: Response) => {
 
     res.status(200).json({
       status: true,
-      message: 'User update successfully',
+      message: 'update User successfully',
+      datal: result,
+    })
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found!',
+      },
+    })
+  }
+}
+
+const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId
+    const result = await userService.deleteUser(userId)
+
+    res.status(200).json({
+      status: true,
+      message: 'delete user successfully',
       datal: result,
     })
   } catch (error: any) {
@@ -88,4 +110,5 @@ export const userController = {
   getAlllUser,
   getSingleUser,
   updateUser,
+  deleteUser,
 }
