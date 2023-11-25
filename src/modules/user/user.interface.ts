@@ -20,10 +20,10 @@ export type TUser = {
   username: string
   password: string
   fullName: TFullName
-  age: number
+  age?: number
   email: string
   isActive: boolean
-  hobbies: string[]
+  hobbies?: string[]
   address: TAddress
   orders?: TOrder[]
 }
