@@ -112,5 +112,4 @@ UserSchema.post('updateOne', function (doc, next) {
 //   this.find({ userStatus: { $eq: 'active' } })
 //   next()
 // })
-
-export const User = model<TUser>('User', UserSchema)
+export const UserModel = model<TUser>('User', UserSchema)

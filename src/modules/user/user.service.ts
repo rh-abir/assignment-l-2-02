@@ -1,13 +1,28 @@
 import { TUser } from './user.interface'
-import { User } from './user.model'
+import { UserModel } from './user.model'
 
-const createUser = async (userData: TUser): Promise<TUser> => {
-  const result = await User.create(userData)
+const createUserIntoDB = async (user: TUser) => {
+  const newUser = await UserModel.create(user)
+  const result = await UserModel.findOne(
+    { _id: newUser._id },
+    {
+      _id: 0,
+      userId: 1,
+      username: 1,
+      fullName: 1,
+      age: 1,
+      email: 1,
+      isActive: 1,
+      hobbies: 1,
+      address: 1,
+    },
+  )
+
   return result
 }
 
 const getAlllUser = async (): Promise<TUser[]> => {
-  const result = await User.find(
+  const result = await UserModel.find(
     {},
     { username: 1, fullName: 1, age: 1, email: 1, address: 1 },
   )
@@ -16,7 +31,7 @@ const getAlllUser = async (): Promise<TUser[]> => {
 }
 
 const getSingleUser = async (userId: string): Promise<TUser | null> => {
-  const result = await User.findById(userId, {
+  const result = await UserModel.findById(userId, {
     password: 0,
     orders: 0,
     __v: 0,
@@ -29,7 +44,7 @@ const updateUser = async (
   userId: string,
   userData: TUser,
 ): Promise<TUser | null> => {
-  const result = await User.findByIdAndUpdate(userId, userData, {
+  const result = await UserModel.findByIdAndUpdate(userId, userData, {
     new: true,
     runValidators: true,
   })
@@ -37,12 +52,12 @@ const updateUser = async (
 }
 
 const deleteUser = async (userId: string): Promise<TUser | null> => {
-  const result = await User.findByIdAndDelete(userId)
+  const result = await UserModel.findByIdAndDelete(userId)
   return result
 }
 
 const createUserOrders = async (userId: string, userData: TUser) => {
-  const result = await User.aggregate([
+  const result = await UserModel.aggregate([
     { $match: { _id: userId } },
     { $addFields: { orders: userData } },
   ])
@@ -51,7 +66,7 @@ const createUserOrders = async (userId: string, userData: TUser) => {
 }
 
 export const userService = {
-  createUser,
+  createUserIntoDB,
   getAlllUser,
   getSingleUser,
   updateUser,
