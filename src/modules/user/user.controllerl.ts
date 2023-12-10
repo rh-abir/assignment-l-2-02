@@ -198,6 +198,40 @@ const createOrder = async (req: Request, res: Response) => {
   }
 }
 
+const getAllOrderASpecificUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params
+    const UserId = Number(userId)
+    const result = await userServices.getAllOrdersASpecificUserFromDB(UserId)
+
+    if (result) {
+      res.status(200).json({
+        success: true,
+        message: 'Order fetched successfully!',
+        data: result,
+      })
+    } else {
+      res.status(404).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found',
+        },
+      })
+    }
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: 'User not found',
+      error: {
+        code: 404,
+        description: 'User not found',
+      },
+    })
+  }
+}
+
 export const userControllers = {
   createUser,
   getAllUser,
@@ -205,4 +239,5 @@ export const userControllers = {
   updateUser,
   deleteSingleUser,
   createOrder,
+  getAllOrderASpecificUser,
 }
