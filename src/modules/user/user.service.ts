@@ -68,19 +68,8 @@ const updateUserIntoDB = async (
   return result
 }
 
-const updateUser = async (
-  userId: string,
-  userData: TUser,
-): Promise<TUser | null> => {
-  const result = await UserModel.findByIdAndUpdate(userId, userData, {
-    new: true,
-    runValidators: true,
-  })
-  return result
-}
-
-const deleteUser = async (userId: string): Promise<TUser | null> => {
-  const result = await UserModel.findByIdAndDelete(userId)
+const deleteUserIntoDB = async (userId: number) => {
+  const result = await UserModel.deleteOne({ userId })
   return result
 }
 
@@ -98,7 +87,6 @@ export const userServices = {
   getAllUserFromDB,
   getSingleUserFromDB,
   updateUserIntoDB,
-  updateUser,
-  deleteUser,
+  deleteUserIntoDB,
   createUserOrders,
 }
