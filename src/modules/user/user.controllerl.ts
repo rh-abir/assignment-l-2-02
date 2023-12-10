@@ -1,29 +1,39 @@
 import { Request, Response } from 'express'
-import { userService } from './user.service'
+import { userServices } from './user.service'
+import { joiUserSchema } from './user.validatioln'
 
 const createUser = async (req: Request, res: Response) => {
   try {
-    const userData = req.body
+    const user = await req.body
+    const { error, value } = joiUserSchema.validate(user)
+    const result = await userServices.createUserIntoDB(value)
 
-    const result = await userService.createUser(userData)
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message:
+          'User is not create successfuly, user is not valid to Joi validator',
+        error: error.details,
+      })
+    }
 
-    res.status(201).json({
-      status: true,
-      message: 'User create successfully',
-      datal: result,
+    res.status(200).json({
+      success: true,
+      message: 'User create successfuly',
+      data: result,
     })
-  } catch (error: any) {
-    console.log(error)
+  } catch (error) {
     res.status(500).json({
-      status: 'fail',
-      message: error.message || 'Something went wrong',
+      success: false,
+      message: 'User is not create successfuly',
+      error: error,
     })
   }
 }
 
 const getAlllUser = async (req: Request, res: Response) => {
   try {
-    const result = await userService.getAlllUser()
+    const result = await userServices.getAlllUser()
     res.status(200).json({
       status: true,
       message: 'Users fetched successfully!',
@@ -41,7 +51,7 @@ const getSingleUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId
 
-    const result = await userService.getSingleUser(userId)
+    const result = await userServices.getSingleUser(userId)
 
     res.status(200).json({
       success: true,
@@ -64,7 +74,7 @@ const updateUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId
     const userData = req.body
-    const result = await userService.updateUser(userId, userData)
+    const result = await userServices.updateUser(userId, userData)
 
     res.status(200).json({
       status: true,
@@ -86,7 +96,7 @@ const updateUser = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId
-    await userService.deleteUser(userId)
+    await userServices.deleteUser(userId)
 
     res.status(200).json({
       success: true,
@@ -109,7 +119,7 @@ const createUserOrders = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId
     const userData = req.body
-    const result = await userService.createUserOrders(userId, userData)
+    const result = await userServices.createUserOrders(userId, userData)
 
     res.status(200).json({
       status: true,
@@ -128,7 +138,7 @@ const createUserOrders = async (req: Request, res: Response) => {
   }
 }
 
-export const userController = {
+export const userControllers = {
   createUser,
   getAlllUser,
   getSingleUser,

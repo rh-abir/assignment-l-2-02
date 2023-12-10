@@ -65,7 +65,7 @@ const createUserOrders = async (userId: string, userData: TUser) => {
   return result
 }
 
-export const userService = {
+export const userServices = {
   createUserIntoDB,
   getAlllUser,
   getSingleUser,

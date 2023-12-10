@@ -1,18 +1,21 @@
-import express from 'express'
-import { userController } from './user.controllerl'
-const route = express.Router()
+import express, { Router } from 'express'
+import { userControllers } from './user.controllerl'
 
-route.post('/', userController.createUser)
+const router: Router = express.Router()
 
-route.get('/', userController.getAlllUser)
+router.post('/', userControllers.createUser)
 
-route.get('/:userId', userController.getSingleUser)
+router.post('/', userControllers.createUser)
 
-route.put('/:userId', userController.updateUser)
+router.get('/:userId', userControllers.getSingleUser)
 
-route.delete('/:userId', userController.deleteUser)
+router.put('/:userId', userControllers.updateUser)
 
-// orders
-route.put('/:userId/orders', userController.createUserOrders)
+router.delete('/:userId', userControllers.deleteSingleUser)
 
-export const userRoute = route
+router.put('/:userId/orders', userControllers.createOrder)
+
+router.get('/:userId/orders', userControllers.getAllOrdersOfASpecificUser)
+
+router.get('/:userId/orders/total-price', userControllers.getTotalPriceOfOrders)
+export const userRoutes = router
