@@ -1,4 +1,4 @@
-import { TUser } from './user.interface'
+import { TOrder, TUser } from './user.interface'
 import { UserModel } from './user.model'
 
 const createUserIntoDB = async (user: TUser) => {
@@ -73,12 +73,11 @@ const deleteUserIntoDB = async (userId: number) => {
   return result
 }
 
-const createUserOrders = async (userId: string, userData: TUser) => {
-  const result = await UserModel.aggregate([
-    { $match: { _id: userId } },
-    { $addFields: { orders: userData } },
-  ])
-
+const createOrderIntoDB = async (userId: number, order: TOrder) => {
+  const result = await UserModel.updateOne(
+    { userId },
+    { $push: { orders: order } },
+  )
   return result
 }
 
@@ -88,5 +87,5 @@ export const userServices = {
   getSingleUserFromDB,
   updateUserIntoDB,
   deleteUserIntoDB,
-  createUserOrders,
+  createOrderIntoDB,
 }

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { userServices } from './user.service'
-import { joiUserSchema } from './user.validatioln'
+import { JoiordersSchema, joiUserSchema } from './user.validatioln'
 
 const createUser = async (req: Request, res: Response) => {
   try {
@@ -156,25 +156,44 @@ const deleteSingleUser = async (req: Request, res: Response) => {
   }
 }
 
-const createUserOrders = async (req: Request, res: Response) => {
+const createOrder = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.userId
-    const userData = req.body
-    const result = await userServices.createUserOrders(userId, userData)
-
-    res.status(200).json({
-      status: true,
-      message: 'Order created successfully!',
-      datal: result,
-    })
+    const { userId } = req.params
+    const UserId = Number(userId)
+    const order = req.body
+    const { error, value } = JoiordersSchema.validate(order)
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message: 'order is not valid',
+        error: {
+          code: 404,
+          description: 'order is not valid',
+        },
+      })
+    }
+    const result = await userServices.createOrderIntoDB(UserId, value)
+    if (result.modifiedCount > 0) {
+      res.status(200).json({
+        success: true,
+        message: 'Order created successfully!',
+        data: null,
+      })
+    } else {
+      res.status(404).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found',
+        },
+      })
+    }
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: 'User not found',
-      error: {
-        code: 404,
-        description: 'User not found!',
-      },
+      message: error.message || 'User not found',
+      error: error,
     })
   }
 }
@@ -185,5 +204,5 @@ export const userControllers = {
   getSingleUser,
   updateUser,
   deleteSingleUser,
-  createUserOrders,
+  createOrder,
 }
