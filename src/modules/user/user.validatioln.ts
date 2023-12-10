@@ -1,33 +1,75 @@
-import { z } from 'zod'
+import Joi from 'joi'
 
-const FullNameSchema = z.object({
-  firstName: z.string().min(3).max(20),
-  lastName: z.string().min(3).max(20),
+const fullNameSchema = Joi.object({
+  firstName: Joi.string().required().messages({
+    'any.required': 'First name is required.',
+    'string.base': 'First name must be a string.',
+  }),
+  lastName: Joi.string().required().messages({
+    'any.required': 'Last name is required.',
+    'string.base': 'Last name must be a string.',
+  }),
 })
 
-const AddressSchema = z.object({
-  street: z.string().min(2),
-  city: z.string().min(2),
-  country: z.string().min(2),
+const addressSchema = Joi.object({
+  street: Joi.string().required().messages({
+    'any.required': 'Street is required.',
+    'string.base': 'Street must be a string.',
+  }),
+  city: Joi.string().required().messages({
+    'any.required': 'City is required.',
+    'string.base': 'City must be a string.',
+  }),
+  country: Joi.string().required().messages({
+    'any.required': 'Country is required.',
+    'string.base': 'Country must be a string.',
+  }),
 })
 
-const OrderSchema = z.object({
-  productName: z.string().min(1),
-  price: z.number().min(0),
-  quantity: z.number().min(1),
+export const JoiordersSchema = Joi.object({
+  productName: Joi.string().messages({
+    'string.base': 'Product name must be a string.',
+  }),
+  price: Joi.number().positive().messages({
+    'any.positive': 'Price is allways positive.',
+    'number.base': 'Price must be a number.',
+  }),
+  quantity: Joi.number().positive().messages({
+    'any.positive': 'Quantity is allways positive.',
+    'number.base': 'Quantity must be a number.',
+  }),
 })
 
-const UserValidationSchema = z.object({
-  userId: z.number().min(1),
-  username: z.string().min(1).max(20),
-  password: z.string(),
-  fullName: FullNameSchema,
-  age: z.number().min(1),
-  email: z.string().email(),
-  isActive: z.boolean(),
-  hobbies: z.array(z.string().min(1).max(255)),
-  address: AddressSchema,
-  orders: z.array(OrderSchema),
+export const joiUserSchema = Joi.object({
+  userId: Joi.number().required().messages({
+    'any.required': 'User ID is required.',
+    'number.base': 'User ID must be a number.',
+  }),
+  username: Joi.string().required().messages({
+    'any.required': 'Username is required.',
+    'string.base': 'Username must be a string.',
+  }),
+  password: Joi.string().required().messages({
+    'any.required': 'Password is required.',
+    'string.base': 'Password must be a string.',
+  }),
+  fullName: fullNameSchema.required(),
+  age: Joi.number().positive().required().messages({
+    'any.required': 'Age is required.',
+    'number.base': 'Age must be a number.',
+  }),
+  email: Joi.string().email().required().messages({
+    'any.required': 'Email is required.',
+    'string.email': 'Invalid email format.',
+  }),
+  isActive: Joi.boolean().required().messages({
+    'any.required': 'isActive is required.',
+    'boolean.base': 'isActive must be a boolean.',
+  }),
+  hobbies: Joi.array().items(Joi.string()).messages({
+    'any.required': 'Hobbies are required.',
+    'array.base': 'Hobbies must be an array.',
+  }),
+  address: addressSchema,
+  orders: Joi.array().items(JoiordersSchema),
 })
-
-export default UserValidationSchema
