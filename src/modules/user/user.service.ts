@@ -51,13 +51,20 @@ const getSingleUserFromDB = async (userId: number): Promise<TUser | null> => {
   return result
 }
 
-const getSingleUser = async (userId: string): Promise<TUser | null> => {
-  const result = await UserModel.findById(userId, {
-    password: 0,
-    orders: 0,
-    __v: 0,
-  })
+const options = {
+  new: true,
+  projection: { orders: 0, password: 0 },
+}
 
+const updateUserIntoDB = async (
+  userId: number,
+  updatedUser: TUser,
+): Promise<TUser | null> => {
+  const result = await UserModel.findOneAndUpdate(
+    { userId },
+    { $set: updatedUser },
+    options,
+  )
   return result
 }
 
@@ -90,7 +97,7 @@ export const userServices = {
   createUserIntoDB,
   getAllUserFromDB,
   getSingleUserFromDB,
-  getSingleUser,
+  updateUserIntoDB,
   updateUser,
   deleteUser,
   createUserOrders,

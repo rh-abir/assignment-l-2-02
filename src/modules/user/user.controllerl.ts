@@ -81,23 +81,43 @@ const getSingleUser = async (req: Request, res: Response) => {
 
 const updateUser = async (req: Request, res: Response) => {
   try {
-    const userId = req.params.userId
-    const userData = req.body
-    const result = await userServices.updateUser(userId, userData)
+    const { userId } = req.params
+    const UserId = Number(userId)
+    const updatedUser = await req.body
+    const { error, value } = joiUserSchema.validate(updatedUser)
 
-    res.status(200).json({
-      status: true,
-      message: 'update User successfully',
-      datal: result,
-    })
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message:
+          'User is not update successfuly , user is not valid to Joi validator',
+        error: error.details,
+      })
+    }
+
+    const result = await userServices.updateUserIntoDB(UserId, value)
+
+    if (result !== null) {
+      res.status(200).json({
+        success: true,
+        message: 'User updated successfully!',
+        data: result,
+      })
+    } else {
+      res.status(404).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      })
+    }
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: 'User not found',
-      error: {
-        code: 404,
-        description: 'User not found!',
-      },
+      message: error.details || 'User not updated!',
+      error: error,
     })
   }
 }
