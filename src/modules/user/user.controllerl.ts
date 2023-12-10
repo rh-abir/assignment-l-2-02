@@ -31,18 +31,19 @@ const createUser = async (req: Request, res: Response) => {
   }
 }
 
-const getAlllUser = async (req: Request, res: Response) => {
+const getAllUser = async (req: Request, res: Response) => {
   try {
-    const result = await userServices.getAlllUser()
+    const result = await userServices.getAllUserFromDB()
     res.status(200).json({
-      status: true,
-      message: 'Users fetched successfully!',
-      datal: result,
+      success: true,
+      message: 'Users fetched successfully ',
+      data: result,
     })
-  } catch (error: any) {
+  } catch (error) {
     res.status(500).json({
-      status: 'fail',
-      message: error.message || 'Something is wrong',
+      success: false,
+      message: 'Users not found',
+      error: error,
     })
   }
 }
@@ -140,7 +141,7 @@ const createUserOrders = async (req: Request, res: Response) => {
 
 export const userControllers = {
   createUser,
-  getAlllUser,
+  getAllUser,
   getSingleUser,
   updateUser,
   deleteUser,

@@ -21,11 +21,14 @@ const createUserIntoDB = async (user: TUser) => {
   return result
 }
 
-const getAlllUser = async (): Promise<TUser[]> => {
-  const result = await UserModel.find(
-    {},
-    { username: 1, fullName: 1, age: 1, email: 1, address: 1 },
-  )
+const getAllUserFromDB = async () => {
+  const result = await UserModel.find({}).select({
+    username: 1,
+    fullName: 1,
+    age: 1,
+    email: 1,
+    address: 1,
+  })
 
   return result
 }
@@ -67,7 +70,7 @@ const createUserOrders = async (userId: string, userData: TUser) => {
 
 export const userServices = {
   createUserIntoDB,
-  getAlllUser,
+  getAllUserFromDB,
   getSingleUser,
   updateUser,
   deleteUser,
