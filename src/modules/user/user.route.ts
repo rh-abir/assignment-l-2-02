@@ -17,4 +17,9 @@ router.put('/:userId/orders', userControllers.createOrder)
 
 router.get('/users/:userId/orders', userControllers.getAllOrderASpecificUser)
 
+router.get(
+  '/users/:userId/orders/total-price',
+  userControllers.getTotalPriceOfOrders,
+)
+
 export const userRoutes = router
