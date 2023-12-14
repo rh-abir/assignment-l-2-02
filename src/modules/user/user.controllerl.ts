@@ -225,13 +225,13 @@ const getAllOrderASpecificUser = async (req: Request, res: Response) => {
 const getTotalPriceOfOrders = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params
-
-    const result = await userServices.getTotalPriceOfOrdersFromDB(userId)
+    const UserId = Number(userId)
+    const result = await userServices.getTotalPriceOfOrdersFromDB(UserId)
 
     if (result.length > 0) {
       res.status(200).json({
         success: true,
-        message: 'calculated Total price successfully',
+        message: 'Total price calculated successfully',
         data: {
           totalPrice: result[0].totalPrice, //sent totalPrice by index because result is a array
         },

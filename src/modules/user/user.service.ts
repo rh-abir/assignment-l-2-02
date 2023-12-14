@@ -86,11 +86,10 @@ const getAllOrdersASpecificUserFromDB = async (UserId: string) => {
   return result
 }
 
-const getTotalPriceOfOrdersFromDB = async (UserId: string) => {
-  console.log(UserId, 'service tag')
+const getTotalPriceOfOrdersFromDB = async (UserId: number) => {
   const result = await UserModel.aggregate([
     // stage 1
-    { $match: { _id: UserId } },
+    { $match: { userId: UserId } },
     // stage 2
     { $unwind: '$orders' },
     // stage 3
@@ -102,17 +101,6 @@ const getTotalPriceOfOrdersFromDB = async (UserId: string) => {
         },
       },
     },
-
-    // { $match: { _id: UserId } },
-
-    // { $unwind: '$orders' },
-
-    // {
-    //   $group: {
-    //     _id: '$_id',
-    //     total: { $sum: '$orders.price' },
-    //   },
-    // },
   ])
   return result
 }
