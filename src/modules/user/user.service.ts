@@ -33,9 +33,9 @@ const getAllUserFromDB = async () => {
   return result
 }
 
-const getSingleUserFromDB = async (userId: number): Promise<TUser | null> => {
+const getSingleUserFromDB = async (userId: string): Promise<TUser | null> => {
   const result = await UserModel.findOne(
-    { userId },
+    { _id: userId },
     {
       userId: 1,
       username: 1,
@@ -51,45 +51,46 @@ const getSingleUserFromDB = async (userId: number): Promise<TUser | null> => {
   return result
 }
 
-const options = {
-  new: true,
-  projection: { orders: 0, password: 0 },
-}
-
 const updateUserIntoDB = async (
-  userId: number,
+  userId: string,
   updatedUser: TUser,
 ): Promise<TUser | null> => {
+  const options = {
+    new: true,
+    projection: { orders: 0, password: 0 },
+  }
+
   const result = await UserModel.findOneAndUpdate(
-    { userId },
+    { _id: userId },
     { $set: updatedUser },
     options,
   )
   return result
 }
 
-const deleteUserIntoDB = async (userId: number) => {
-  const result = await UserModel.deleteOne({ userId })
+const deleteUserIntoDB = async (userId: string) => {
+  const result = await UserModel.deleteOne({ _id: userId })
   return result
 }
 
-const createOrderIntoDB = async (userId: number, order: TOrder) => {
+const createOrderIntoDB = async (userId: string, order: TOrder) => {
   const result = await UserModel.updateOne(
-    { userId },
+    { _id: userId },
     { $push: { orders: order } },
   )
   return result
 }
 
-const getAllOrdersASpecificUserFromDB = async (UserId: number) => {
-  const result = await UserModel.findOne({ userId: UserId }, { orders: 1 })
+const getAllOrdersASpecificUserFromDB = async (UserId: string) => {
+  const result = await UserModel.findOne({ _id: UserId }, { orders: 1 })
   return result
 }
 
-const getTotalPriceOfOrdersFromDB = async (UserId: number) => {
+const getTotalPriceOfOrdersFromDB = async (UserId: string) => {
+  console.log(UserId, 'service tag')
   const result = await UserModel.aggregate([
     // stage 1
-    { $match: { userId: UserId } },
+    { $match: { _id: UserId } },
     // stage 2
     { $unwind: '$orders' },
     // stage 3
@@ -101,6 +102,17 @@ const getTotalPriceOfOrdersFromDB = async (UserId: number) => {
         },
       },
     },
+
+    // { $match: { _id: UserId } },
+
+    // { $unwind: '$orders' },
+
+    // {
+    //   $group: {
+    //     _id: '$_id',
+    //     total: { $sum: '$orders.price' },
+    //   },
+    // },
   ])
   return result
 }

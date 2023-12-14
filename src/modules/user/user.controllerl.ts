@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express'
 import { userServices } from './user.service'
 import { JoiordersSchema, joiUserSchema } from './user.validatioln'
@@ -51,8 +52,8 @@ const getAllUser = async (req: Request, res: Response) => {
 const getSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params
-    const UserId = Number(userId)
-    const result = await userServices.getSingleUserFromDB(UserId)
+
+    const result = await userServices.getSingleUserFromDB(userId)
 
     if (result === null) {
       res.status(404).json({
@@ -82,20 +83,10 @@ const getSingleUser = async (req: Request, res: Response) => {
 const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params
-    const UserId = Number(userId)
+
     const updatedUser = await req.body
-    const { error, value } = joiUserSchema.validate(updatedUser)
 
-    if (error) {
-      res.status(500).json({
-        success: false,
-        message:
-          'User is not update successfuly , user is not valid to Joi validator',
-        error: error.details,
-      })
-    }
-
-    const result = await userServices.updateUserIntoDB(UserId, value)
+    const result = await userServices.updateUserIntoDB(userId, updatedUser)
 
     if (result !== null) {
       res.status(200).json({
@@ -125,8 +116,7 @@ const updateUser = async (req: Request, res: Response) => {
 const deleteSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params
-    const UserId = Number(userId)
-    const result = await userServices.deleteUserIntoDB(UserId)
+    const result = await userServices.deleteUserIntoDB(userId)
 
     if (result.deletedCount > 0) {
       res.status(200).json({
@@ -159,7 +149,7 @@ const deleteSingleUser = async (req: Request, res: Response) => {
 const createOrder = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params
-    const UserId = Number(userId)
+
     const order = req.body
     const { error, value } = JoiordersSchema.validate(order)
     if (error) {
@@ -172,7 +162,7 @@ const createOrder = async (req: Request, res: Response) => {
         },
       })
     }
-    const result = await userServices.createOrderIntoDB(UserId, value)
+    const result = await userServices.createOrderIntoDB(userId, value)
     if (result.modifiedCount > 0) {
       res.status(200).json({
         success: true,
@@ -201,8 +191,8 @@ const createOrder = async (req: Request, res: Response) => {
 const getAllOrderASpecificUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params
-    const UserId = Number(userId)
-    const result = await userServices.getAllOrdersASpecificUserFromDB(UserId)
+
+    const result = await userServices.getAllOrdersASpecificUserFromDB(userId)
 
     if (result) {
       res.status(200).json({
@@ -235,8 +225,8 @@ const getAllOrderASpecificUser = async (req: Request, res: Response) => {
 const getTotalPriceOfOrders = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params
-    const UserId = Number(userId)
-    const result = await userServices.getTotalPriceOfOrdersFromDB(UserId)
+
+    const result = await userServices.getTotalPriceOfOrdersFromDB(userId)
 
     if (result.length > 0) {
       res.status(200).json({
